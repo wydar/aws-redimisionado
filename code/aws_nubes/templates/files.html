@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title> S3 bukect files</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P" crossorigin="anonymous">      
+    </head>
+    <body>
+        <h1>Bucket info</h1>
+        <p>Created: {{ my_bucket.creation_date }}</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for m in messages %}
+                    {{ m }} <br>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <hr>
+
+        <table>
+            <th>File</th>
+            <th>Last Modified</th>
+            {% for f in files %}
+                <tr>
+                    <td>{{ f.key }}</td>
+                    <td>{{ f.last_modified }}</td>
+                    <td>
+                        <form class="delete-form" action="{{ url_for('.delete') }}" method="POST">
+                            <input type="hidden" name="key" value="{{ f.key }}">
+                            <button type="submit">
+                                <i class="fa fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                        <form class="download-form" action="{{ url_for('.download') }}" method="POST">
+                            <input type="hidden" name="key" value="{{ f.key }}">
+                            <button type="submit">
+                                <i class="fa fa-download"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

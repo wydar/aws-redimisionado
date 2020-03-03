@@ -1,0 +1,145 @@
+<html lang="es">
+    <head>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P" crossorigin="anonymous">
+        <title>Todas las imagenes</title>
+        <style>
+            .footer {
+                position: absolute;
+                bottom: 0;
+                height: 3.5rem;
+                width: 100%;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="position: relative; min-height: 100vh;">
+            <!-- Header -->
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <div class="container">
+                        <a class="navbar-brand text-info text-uppercase" href="/"><h1>Redimensionador</h1></a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarsExample07">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/">Inicio<span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    {% if label %}
+                                        <a class="nav-link" href="/imgs">Imagenes<span class="sr-only">(current)</span></a>
+                                    {% else %}
+                                        <a class="nav-link active" href="/imgs">Imagenes<span class="sr-only">(current)</span></a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                            <form class="form-inline my-2 my-md-0" action = "/search" method = "POST">
+                                {% if label %}
+                                    <input class="form-control" type="search" placeholder="Buscar" aria-label="Buscar" name="Busqueda" value="{{ label }}">
+                                {% else %}
+                                    <input class="form-control" type="search" placeholder="Buscar" aria-label="Buscar" name="Busqueda">
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+            <div style="padding-bottom: 3.5rem;">
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-1 col-xl-2"></div>
+                        <div class="col-lg-10 col-xl-8">
+                            <br>
+                            {% if label %}
+                                <h2 class="text-center">Resultados de la busqueda: {{ label }}</h2>
+                            {% else %}
+                                <h2 class="text-center">Todas las imagenes</h2>
+                            {% endif %}
+                            <br>
+                        </div>
+                        <div class="col-lg-1 col-xl-2"></div>
+                    </div>
+                    <div class="row" style="text-align: center;">
+                        <div class="col-md-2 col-lg-3"></div>
+                        <div class="col-md-8 col-lg-6">
+                            {% if label %}
+                                {% if files|length == 0 %}
+                                    <p>No se ha encontrado ninguna imagen </p>
+                                {% else %}
+                                    <div class="panel panel-default">
+                                        <table class="table table-striped" style="text-align: center;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="vertical-align:middle;">Imagen</th>
+                                                    <th scope="col" style="vertical-align:middle;">Ultima modificación</th>
+                                                    <th scope="col" colspan="2" style="vertical-align:middle;">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for f in files %}
+                                                <tr>
+                                                    <td>{{ f.key }}</td>
+                                                    <td>{{ f.last_modified }}</td>
+                                                    <td>
+                                                        <form class="download-form" action="{{ url_for('.download') }}" method="POST">
+                                                            <input type="hidden" name="key" value="{{ f.key }}">
+                                                            <button type="submit" class="btn btn-success">
+                                                                <i class="fa fa-download"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                            <div class="panel panel-default">
+                                <table class="table table-striped" style="text-align: center;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="vertical-align:middle;">Imagen</th>
+                                            <th scope="col" style="vertical-align:middle;">Ultima modificación</th>
+                                            <th scope="col" colspan="2" style="vertical-align:middle;">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for f in files %}
+                                        <tr>
+                                            <td>{{ f.key }}</td>
+                                            <td>{{ f.last_modified }}</td>
+                                            <td>
+                                                <form class="download-form" action="{{ url_for('.download') }}" method="POST">
+                                                    <input type="hidden" name="key" value="{{ f.key }}">
+                                                    <button type="submit" class="btn btn-success">
+                                                        <i class="fa fa-download"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-2 col-lg-3"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <footer class="footer font-small bg-dark text-center py-3">
+                GRUPO IAAS09 - DESARROLLO DE APLICACIONES EN LA NUBE
+            </footer>
+        </div>
+    </body>
+</html>
